@@ -55,3 +55,29 @@ Esta versão limita o catálogo a **30 produtos no total**.
 - Editar produtos existentes continua permitido.
 - Para cadastrar o 31º, é necessário excluir um produto existente.
 - Para instalações Supabase já publicadas, rode `supabase/home_interiores_limite_30_produtos.sql` no SQL Editor para ativar também a trava no banco.
+
+
+## Vercel + painel /admin (configuração obrigatória)
+
+O catálogo público usa a chave publicável do Supabase somente para leitura. As alterações feitas pelo painel passam por funções server-side do Vercel, mantendo o RLS habilitado.
+
+No Vercel, abra **Project > Settings > Environment Variables** e configure:
+
+```env
+VITE_SUPABASE_URL=https://SEU-PROJETO.supabase.co
+VITE_SUPABASE_PUBLISHABLE_KEY=sb_publishable_...
+SUPABASE_URL=https://SEU-PROJETO.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=...
+HOME_INTERIORES_ADMIN_PASSWORD=asd123
+HOME_INTERIORES_SESSION_SECRET=uma-chave-aleatoria-longa-com-32-ou-mais-caracteres
+```
+
+**Segurança:** `SUPABASE_SERVICE_ROLE_KEY` é privada e deve existir somente no Vercel. Nunca crie `VITE_SUPABASE_SERVICE_ROLE_KEY` e nunca coloque essa chave no código do frontend.
+
+Depois de salvar as variáveis, faça um novo deploy. Entre em `/admin` com a senha `asd123`. O login cria uma sessão segura HttpOnly por até 8 horas.
+
+Não desative o RLS e não crie policy de escrita para `anon`. O site público deve continuar somente leitura.
+
+### Limite comercial
+
+O sistema mantém o limite máximo de 30 produtos. A validação é feita no painel e também na API antes de qualquer novo cadastro.

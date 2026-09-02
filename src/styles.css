@@ -103,3 +103,39 @@ body{background:var(--paper)}
 /* Limite comercial do catálogo: máximo de 30 produtos */
 .productLimitCount{display:flex;justify-content:space-between;align-items:center;gap:16px;background:#faf8f4}.productLimitCount span:last-child{font-size:10px;color:#7d583b}.productLimitCount.full{background:#f1e8df;color:#6d4228}.productLimitCount.full span:last-child{font-weight:700;color:#6d4228}.adminTop .btn:disabled,.productForm .btn:disabled{opacity:.48;cursor:not-allowed;transform:none}
 @media(max-width:700px){.productLimitCount{align-items:flex-start;flex-direction:column;gap:5px}}
+
+/* Footer em bege claro */
+footer{background:#eee7de;color:#342d27}
+footer>p{color:#6f665e}
+footer a{color:#342d27}
+footer .footcols b{color:#342d27}
+.copyright{border-top-color:rgba(52,45,39,.16);color:#7d746c}
+/* FINAL — rodapé e faixa de chamada em bege claro */
+.cta{background:#eee7de;color:#342d27}
+.cta .light{background:#7d583b;color:#fff;border-color:#7d583b}
+.cta .light:hover{background:#5f402b;border-color:#5f402b;color:#fff}
+.cta .textLink{color:#342d27}
+footer{background:#eee7de!important;color:#342d27!important}
+footer>p{color:#6f665e!important}
+footer a,footer span,footer .footcols b{color:#342d27}
+.copyright{border-top-color:rgba(52,45,39,.16)!important;color:#7d746c!important}
+
+/* FINAL: remove o último bloco verde da área pública */
+.section.dark{
+  background:#e8dfd4!important;
+  color:#342d27!important;
+}
+.section.dark .lighttxt,
+.section.dark p,
+.section.dark .eyebrow{
+  color:#6f665e!important;
+}
+.section.dark .btn.outline{
+  color:#342d27!important;
+  border-color:#7d583b!important;
+}
+.section.dark .btn.outline:hover{
+  background:#7d583b!important;
+  color:#fff!important;
+  border-color:#7d583b!important;
+}
