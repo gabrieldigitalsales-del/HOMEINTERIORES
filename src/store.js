@@ -2,6 +2,7 @@ import { supabase, supabaseEnabled } from './supabase';
 
 export const TABLE_PRODUCTS = 'home_interiores_catalogo_produtos_2026';
 export const BUCKET_IMAGES = 'home-interiores-produtos-2026';
+export const MAX_PRODUCTS = 30;
 const LOCAL_KEY = 'home_interiores_catalogo_produtos_2026';
 
 export const seedProducts = [
@@ -60,9 +61,20 @@ export async function listProducts(){
 export async function saveProduct(product){
   if (!supabaseEnabled) {
     const items = localGet();
+    const isNew = !product.id;
+    if (isNew && items.length >= MAX_PRODUCTS) {
+      throw new Error(`Limite máximo de ${MAX_PRODUCTS} produtos atingido. Exclua um produto para cadastrar outro.`);
+    }
     const id = product.id || crypto.randomUUID();
     const next = [{...product,id}, ...items.filter(x=>x.id!==id)];
     localSet(next); return {...product,id};
+  }
+  if (!product.id) {
+    const { count, error: countError } = await supabase.from(TABLE_PRODUCTS).select('id', { count: 'exact', head: true });
+    if (countError) throw countError;
+    if ((count || 0) >= MAX_PRODUCTS) {
+      throw new Error(`Limite máximo de ${MAX_PRODUCTS} produtos atingido. Exclua um produto para cadastrar outro.`);
+    }
   }
   const payload = {...product};
   payload.image_urls = Array.isArray(payload.image_urls) ? [...new Set(payload.image_urls.filter(Boolean))] : (payload.image_url ? [payload.image_url] : []);

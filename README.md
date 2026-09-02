@@ -46,3 +46,12 @@ Recursos usam nomes exclusivos:
 
 ### Observação de segurança
 A senha simples `asd123` é uma trava de interface conforme solicitado. Para uma publicação pública com escrita real no Supabase, o ideal é posteriormente validar a senha no servidor/Edge Function ou usar Supabase Auth. Não exponha uma `service_role` no frontend.
+
+## Limite comercial de produtos
+Esta versão limita o catálogo a **30 produtos no total**.
+
+- O painel exibe `X de 30 produtos utilizados`.
+- Ao atingir 30, o botão de novo produto é bloqueado.
+- Editar produtos existentes continua permitido.
+- Para cadastrar o 31º, é necessário excluir um produto existente.
+- Para instalações Supabase já publicadas, rode `supabase/home_interiores_limite_30_produtos.sql` no SQL Editor para ativar também a trava no banco.

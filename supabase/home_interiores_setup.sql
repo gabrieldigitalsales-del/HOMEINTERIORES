@@ -138,3 +138,35 @@ insert into public.home_interiores_configuracoes_site_2026 (
   'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=2000&q=88',
   'https://images.unsplash.com/photo-1618220179428-22790b461013?auto=format&fit=crop&w=1600&q=88'
 ) on conflict (id) do nothing;
+
+
+-- LIMITE COMERCIAL DO CATÁLOGO — máximo de 30 produtos no total.
+-- A trava abaixo protege o limite também no banco, inclusive se houver tentativa de inserir fora do painel.
+create or replace function public.home_interiores_validar_limite_produtos_2026()
+returns trigger
+language plpgsql
+security invoker
+set search_path = public
+as $$
+declare
+  total_produtos integer;
+begin
+  -- Serializa tentativas simultâneas de cadastro para não ultrapassar 30 por concorrência.
+  perform pg_advisory_xact_lock(hashtext('home_interiores_limite_30_produtos_2026'));
+
+  select count(*) into total_produtos
+  from public.home_interiores_catalogo_produtos_2026;
+
+  if total_produtos >= 30 then
+    raise exception 'Limite máximo de 30 produtos atingido. Exclua um produto para cadastrar outro.';
+  end if;
+
+  return new;
+end;
+$$;
+
+drop trigger if exists home_interiores_limite_produtos_2026 on public.home_interiores_catalogo_produtos_2026;
+create trigger home_interiores_limite_produtos_2026
+before insert on public.home_interiores_catalogo_produtos_2026
+for each row
+execute function public.home_interiores_validar_limite_produtos_2026();
