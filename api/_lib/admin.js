@@ -5,6 +5,7 @@ export const COOKIE_NAME = 'home_interiores_admin_session_2026';
 export const MAX_PRODUCTS = 30;
 export const TABLE_PRODUCTS = 'home_interiores_catalogo_produtos_2026';
 export const TABLE_SETTINGS = 'home_interiores_configuracoes_site_2026';
+export const TABLE_CATEGORIES = 'home_interiores_categorias_2026';
 export const BUCKET_IMAGES = 'home-interiores-produtos-2026';
 
 function sessionSecret(){

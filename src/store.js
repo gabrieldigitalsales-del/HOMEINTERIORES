@@ -3,6 +3,9 @@ import { supabase, supabaseEnabled } from './supabase';
 export const TABLE_PRODUCTS = 'home_interiores_catalogo_produtos_2026';
 export const BUCKET_IMAGES = 'home-interiores-produtos-2026';
 export const MAX_PRODUCTS = 30;
+export const TABLE_CATEGORIES = 'home_interiores_categorias_2026';
+export const defaultCategories = ['Mesas','Sofás','Poltronas','Aparadores','Cadeiras','Decoração'];
+const LOCAL_CATEGORIES_KEY = 'home_interiores_categorias_2026';
 const LOCAL_KEY = 'home_interiores_catalogo_produtos_2026';
 
 export const seedProducts = [
@@ -114,6 +117,48 @@ export async function uploadImage(file){
   const {error}=await supabase.storage.from(BUCKET_IMAGES).uploadToSignedUrl(signed.path,signed.token,file,{cacheControl:'3600',contentType:file.type||undefined});
   if(error) throw error;
   return signed.publicUrl;
+}
+
+
+function localCategoriesGet(){
+  const raw=localStorage.getItem(LOCAL_CATEGORIES_KEY);
+  if(!raw){localStorage.setItem(LOCAL_CATEGORIES_KEY,JSON.stringify(defaultCategories));return defaultCategories.map((name,i)=>({id:`local-${i}`,name,position:i+1}));}
+  try{return JSON.parse(raw).map((name,i)=>typeof name==='string'?{id:`local-${i}`,name,position:i+1}:name)}catch{return defaultCategories.map((name,i)=>({id:`local-${i}`,name,position:i+1}))}
+}
+function localCategoriesSet(items){localStorage.setItem(LOCAL_CATEGORIES_KEY,JSON.stringify(items));}
+
+export async function listCategories(){
+  if(!supabaseEnabled) return localCategoriesGet();
+  const {data,error}=await supabase.from(TABLE_CATEGORIES).select('*').order('position',{ascending:true}).order('name',{ascending:true});
+  if(error){console.warn(error);return defaultCategories.map((name,i)=>({id:`fallback-${i}`,name,position:i+1}))}
+  return data?.length?data:defaultCategories.map((name,i)=>({id:`fallback-${i}`,name,position:i+1}));
+}
+
+export async function saveCategory(category){
+  if(!supabaseEnabled){
+    const items=localCategoriesGet();
+    const name=String(category?.name||'').trim();
+    if(!name) throw new Error('Informe o nome da categoria.');
+    if(items.some(x=>x.name.toLowerCase()===name.toLowerCase() && x.id!==category.id)) throw new Error('Essa categoria já existe.');
+    const old=items.find(x=>x.id===category.id);
+    const id=category.id||`local-${Date.now()}`;
+    const next=category.id?items.map(x=>x.id===id?{...x,name}:x):[...items,{id,name,position:items.length+1}];
+    localCategoriesSet(next);
+    if(old && old.name!==name){localSet(localGet().map(p=>p.category===old.name?{...p,category:name}:p));}
+    return {id,name};
+  }
+  const {data}=await adminRequest('saveCategory',{category});
+  return data;
+}
+
+export async function deleteCategory(id){
+  if(!supabaseEnabled){
+    const items=localCategoriesGet();
+    const cat=items.find(x=>x.id===id);
+    if(cat && localGet().some(p=>p.category===cat.name)) throw new Error('Essa categoria está sendo usada por produto(s). Troque a categoria desses produtos antes de excluir.');
+    localCategoriesSet(items.filter(x=>x.id!==id));return;
+  }
+  await adminRequest('deleteCategory',{id});
 }
 
 export const TABLE_SETTINGS = 'home_interiores_configuracoes_site_2026';

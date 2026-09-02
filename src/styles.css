@@ -139,3 +139,22 @@ footer a,footer span,footer .footcols b{color:#342d27}
   color:#fff!important;
   border-color:#7d583b!important;
 }
+
+/* FINAL — gerenciamento de categorias */
+.productForm select{width:100%;min-height:47px;border:1px solid #d7d1c8;background:#fff;padding:12px 13px;font:inherit;color:inherit;outline:none}
+.productForm select:focus{border-color:var(--brand-brown)}
+.fieldHelp{display:block;margin-top:7px;color:#847b72;font-size:11px;line-height:1.4}
+.categoryAdminLayout{display:grid;grid-template-columns:minmax(330px,480px) minmax(420px,1fr);gap:28px;align-items:start}
+.categoryForm{position:sticky;top:28px}
+.categoryList{background:#fff;border:1px solid #dedad2}
+.categoryList .adminCount{border:0;border-bottom:1px solid #e2ddd6}
+.categoryList article{display:grid;grid-template-columns:1fr auto;gap:18px;align-items:center;padding:18px 20px;border-bottom:1px solid #ebe7e1}
+.categoryList article:last-child{border-bottom:0}
+.categoryList article>div:first-child>span{display:block;font-size:9px;text-transform:uppercase;letter-spacing:.12em;color:#8a8178;margin-bottom:5px}
+.categoryList h3{font-size:21px;margin:0 0 4px;font-weight:500}
+.categoryList small{color:#817970}
+.categoryList .rowActions{display:flex;gap:8px}
+.categoryList .rowActions button:disabled{opacity:.3;cursor:not-allowed}
+.categoryCancel{margin-top:9px;width:100%}
+@media(max-width:1000px){.categoryAdminLayout{grid-template-columns:1fr}.categoryForm{position:static}}
+@media(max-width:780px){.categoryList article{padding:15px 14px}.categoryList h3{font-size:19px}.productForm select{font-size:16px}}
