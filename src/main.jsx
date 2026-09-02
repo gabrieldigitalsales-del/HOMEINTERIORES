@@ -3,7 +3,7 @@ import {createRoot} from 'react-dom/client';
 import {BrowserRouter, Routes, Route, Link, NavLink} from 'react-router-dom';
 import {ArrowUpRight, ArrowRight, Menu, X, Instagram, MapPin, Search, Plus, Pencil, Trash2, LogOut, Upload, Check, Loader2, ChevronLeft, ChevronRight, SlidersHorizontal, Package, Image as ImageIcon, Eye} from 'lucide-react';
 import './styles.css';
-import {listProducts, saveProduct, deleteProduct, uploadImage, seedProducts, getSiteSettings, saveSiteSettings, defaultSettings, MAX_PRODUCTS} from './store';
+import {listProducts, saveProduct, deleteProduct, uploadImage, seedProducts, getSiteSettings, saveSiteSettings, defaultSettings, MAX_PRODUCTS, checkAdminSession, adminLogin, adminLogout} from './store';
 
 const LOGO='/home-interiores-logo.png';
 const designFallback='https://images.unsplash.com/photo-1618220179428-22790b461013?auto=format&fit=crop&w=1600&q=88';
@@ -32,10 +32,10 @@ function Contact(){const s=useSettings();return <Shell><PageHero kicker="Atendim
 
 const blank={name:'',category:'',description:'',price:'',image_url:'',image_urls:[],seller_name:'Equipe Home Interiores',seller_whatsapp:defaultSettings.whatsapp_general,featured:false};
 function Admin(){const [authed,setAuthed]=useState(false),[password,setPassword]=useState(''),[tab,setTab]=useState('products'),[products,setProducts]=useState([]),[form,setForm]=useState(blank),[settings,setSettings]=useState(defaultSettings),[busy,setBusy]=useState(false),[msg,setMsg]=useState('');
- useEffect(()=>{if(sessionStorage.getItem('home_interiores_admin_session')==='1'){setAuthed(true);loadAll()}},[]);
+ useEffect(()=>{let alive=true;(async()=>{if(await checkAdminSession()){if(!alive)return;setAuthed(true);await loadAll()}})();return()=>{alive=false}},[]);
  async function loadAll(){const [p,s]=await Promise.all([listProducts(),getSiteSettings()]);setProducts(p);setSettings(s)}
- async function login(e){e.preventDefault();setMsg('');if(password==='asd123'){sessionStorage.setItem('home_interiores_admin_session','1');setAuthed(true);await loadAll()}else setMsg('Senha inválida.')}
- function logout(){sessionStorage.removeItem('home_interiores_admin_session');setAuthed(false);setPassword('')}
+ async function login(e){e.preventDefault();setMsg('');setBusy(true);try{await adminLogin(password);setAuthed(true);await loadAll()}catch(err){setMsg(err.message||'Senha inválida.')}finally{setBusy(false)}}
+ async function logout(){await adminLogout();setAuthed(false);setPassword('')}
  async function submitProduct(e){e.preventDefault();setMsg('');if(!form.id&&products.length>=MAX_PRODUCTS){setMsg(`Limite máximo de ${MAX_PRODUCTS} produtos atingido. Exclua um produto para cadastrar outro.`);return;}setBusy(true);try{await saveProduct(form);setForm(blank);setProducts(await listProducts());setMsg('Produto salvo com sucesso.')}catch(err){setMsg(`Erro: ${err.message}`)}finally{setBusy(false)}}
  function newProduct(){if(products.length>=MAX_PRODUCTS){setMsg(`Você já utiliza ${products.length} de ${MAX_PRODUCTS} produtos. Exclua um produto para liberar uma nova vaga.`);return;}setMsg('');setForm(blank);window.scrollTo({top:0,behavior:'smooth'})}
  async function remove(id){if(!confirm('Remover este produto?'))return;await deleteProduct(id);setProducts(await listProducts())}

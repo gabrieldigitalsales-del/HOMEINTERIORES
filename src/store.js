@@ -58,46 +58,62 @@ export async function listProducts(){
   return data?.length ? data : seedProducts;
 }
 
+async function adminRequest(action, payload={}){
+  const response = await fetch('/api/admin-data', {
+    method:'POST',
+    credentials:'same-origin',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({action,...payload})
+  });
+  const result = await response.json().catch(()=>({}));
+  if(!response.ok) throw new Error(result.error || 'Erro ao comunicar com o painel.');
+  return result;
+}
+
+export async function checkAdminSession(){
+  try{
+    const r=await fetch('/api/admin-session',{credentials:'same-origin'});
+    const j=await r.json();
+    return !!j.authenticated;
+  }catch{return false}
+}
+
+export async function adminLogin(password){
+  const r=await fetch('/api/admin-login',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({password})});
+  const j=await r.json().catch(()=>({}));
+  if(!r.ok) throw new Error(j.error||'Senha inválida.');
+  return true;
+}
+
+export async function adminLogout(){
+  await fetch('/api/admin-logout',{method:'POST',credentials:'same-origin'}).catch(()=>{});
+}
+
 export async function saveProduct(product){
   if (!supabaseEnabled) {
     const items = localGet();
     const isNew = !product.id;
-    if (isNew && items.length >= MAX_PRODUCTS) {
-      throw new Error(`Limite máximo de ${MAX_PRODUCTS} produtos atingido. Exclua um produto para cadastrar outro.`);
-    }
+    if (isNew && items.length >= MAX_PRODUCTS) throw new Error(`Limite máximo de ${MAX_PRODUCTS} produtos atingido. Exclua um produto para cadastrar outro.`);
     const id = product.id || crypto.randomUUID();
     const next = [{...product,id}, ...items.filter(x=>x.id!==id)];
     localSet(next); return {...product,id};
   }
-  if (!product.id) {
-    const { count, error: countError } = await supabase.from(TABLE_PRODUCTS).select('id', { count: 'exact', head: true });
-    if (countError) throw countError;
-    if ((count || 0) >= MAX_PRODUCTS) {
-      throw new Error(`Limite máximo de ${MAX_PRODUCTS} produtos atingido. Exclua um produto para cadastrar outro.`);
-    }
-  }
-  const payload = {...product};
-  payload.image_urls = Array.isArray(payload.image_urls) ? [...new Set(payload.image_urls.filter(Boolean))] : (payload.image_url ? [payload.image_url] : []);
-  payload.image_url = payload.image_urls[0] || payload.image_url || '';
-  if (!payload.id) delete payload.id;
-  const { data, error } = await supabase.from(TABLE_PRODUCTS).upsert(payload).select().single();
-  if (error) throw error;
+  const {data}=await adminRequest('saveProduct',{product});
   return data;
 }
 
 export async function deleteProduct(id){
   if (!supabaseEnabled) { localSet(localGet().filter(x=>x.id!==id)); return; }
-  const { error } = await supabase.from(TABLE_PRODUCTS).delete().eq('id', id);
-  if (error) throw error;
+  await adminRequest('deleteProduct',{id});
 }
 
 export async function uploadImage(file){
   if (!supabaseEnabled) return await new Promise((resolve,reject)=>{ const r=new FileReader(); r.onload=()=>resolve(r.result); r.onerror=reject; r.readAsDataURL(file); });
   const ext = file.name.split('.').pop()?.toLowerCase() || 'jpg';
-  const path = `${Date.now()}-${crypto.randomUUID()}.${ext}`;
-  const { error } = await supabase.storage.from(BUCKET_IMAGES).upload(path, file, { upsert:false, cacheControl:'3600' });
-  if (error) throw error;
-  return supabase.storage.from(BUCKET_IMAGES).getPublicUrl(path).data.publicUrl;
+  const signed=await adminRequest('createUpload',{ext});
+  const {error}=await supabase.storage.from(BUCKET_IMAGES).uploadToSignedUrl(signed.path,signed.token,file,{cacheControl:'3600',contentType:file.type||undefined});
+  if(error) throw error;
+  return signed.publicUrl;
 }
 
 export const TABLE_SETTINGS = 'home_interiores_configuracoes_site_2026';
@@ -129,7 +145,6 @@ export async function getSiteSettings(){
 export async function saveSiteSettings(settings){
   const payload={...defaultSettings,...settings,id:'principal'};
   if (!supabaseEnabled){localStorage.setItem(LOCAL_SETTINGS_KEY,JSON.stringify(payload));return payload;}
-  const {data,error}=await supabase.from(TABLE_SETTINGS).upsert(payload).select().single();
-  if(error) throw error;
+  const {data}=await adminRequest('saveSettings',{settings:payload});
   return data;
 }
