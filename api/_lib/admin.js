@@ -44,8 +44,10 @@ export function clearSessionCookie(){
 }
 
 export function adminPassword(){
-  return process.env.HOME_INTERIORES_ADMIN_PASSWORD || 'asd123';
+  // Em produção, nunca usa senha padrão. No desenvolvimento local, o frontend aceita asd123 sem passar pela API.
+  return process.env.HOME_INTERIORES_ADMIN_PASSWORD || '';
 }
+
 
 export function serverSupabase(){
   const url = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;

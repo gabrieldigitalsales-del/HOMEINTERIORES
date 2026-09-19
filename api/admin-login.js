@@ -14,10 +14,8 @@ export default async function handler(req,res){
 
   const supplied = await readPassword(req);
   const configured = String(adminPassword() || '').trim();
-  // asd123 permanece como senha de acesso garantida nesta versão.
-  const validPasswords = new Set(['asd123', configured].filter(Boolean));
-
-  if(!validPasswords.has(supplied)) return json(res,401,{error:'Senha inválida.'});
+  if(!configured) return json(res,500,{error:'Configure HOME_INTERIORES_ADMIN_PASSWORD no Vercel antes de usar o painel.'});
+  if(supplied !== configured) return json(res,401,{error:'Senha inválida.'});
 
   try {
     res.setHeader('Set-Cookie', makeSessionCookie());

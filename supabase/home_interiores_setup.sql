@@ -112,8 +112,14 @@ create table if not exists public.home_interiores_configuracoes_site_2026 (
   whatsapp_general text not null default '5531990813008',
   location text not null default 'Sete Lagoas - MG',
   institutional_image_url text not null default '',
+  promo_enabled boolean not null default true,
+  promo_messages jsonb not null default '["ATÉ 10% OFF À VISTA","FRETE GRÁTIS EM CONDIÇÕES ESPECIAIS","OFERTAS EM PEÇAS SELECIONADAS","CONDIÇÕES EXCLUSIVAS PELO WHATSAPP","NOVIDADES NO SHOWROOM TODA SEMANA"]'::jsonb,
   updated_at timestamptz not null default now()
 );
+
+-- Atualização segura para bancos já existentes
+alter table public.home_interiores_configuracoes_site_2026 add column if not exists promo_enabled boolean not null default true;
+alter table public.home_interiores_configuracoes_site_2026 add column if not exists promo_messages jsonb not null default '["ATÉ 10% OFF À VISTA","FRETE GRÁTIS EM CONDIÇÕES ESPECIAIS","OFERTAS EM PEÇAS SELECIONADAS","CONDIÇÕES EXCLUSIVAS PELO WHATSAPP","NOVIDADES NO SHOWROOM TODA SEMANA"]'::jsonb;
 
 alter table public.home_interiores_configuracoes_site_2026 enable row level security;
 grant select on table public.home_interiores_configuracoes_site_2026 to anon, authenticated;
@@ -204,3 +210,34 @@ on conflict do nothing;
 -- Catálogo premium: organização por ambiente.
 alter table public.home_interiores_catalogo_produtos_2026
   add column if not exists environment text not null default 'Sala de estar';
+
+
+-- BASE NEXOR / catálogo avançado: campos de produção, conversão e SEO por produto.
+alter table public.home_interiores_catalogo_produtos_2026 add column if not exists code text;
+alter table public.home_interiores_catalogo_produtos_2026 add column if not exists slug text;
+alter table public.home_interiores_catalogo_produtos_2026 add column if not exists status text not null default 'Disponível';
+alter table public.home_interiores_catalogo_produtos_2026 add column if not exists old_price text not null default '';
+alter table public.home_interiores_catalogo_produtos_2026 add column if not exists published boolean not null default true;
+alter table public.home_interiores_catalogo_produtos_2026 add column if not exists publication_status text not null default 'published';
+alter table public.home_interiores_catalogo_produtos_2026 add column if not exists sort_order integer not null default 100;
+alter table public.home_interiores_catalogo_produtos_2026 add column if not exists related_ids jsonb not null default '[]'::jsonb;
+create unique index if not exists home_interiores_produtos_code_unique on public.home_interiores_catalogo_produtos_2026(code) where code is not null and code <> '';
+create unique index if not exists home_interiores_produtos_slug_unique on public.home_interiores_catalogo_produtos_2026(slug) where slug is not null and slug <> '';
+
+alter table public.home_interiores_configuracoes_site_2026 add column if not exists promo_start_at text not null default '';
+alter table public.home_interiores_configuracoes_site_2026 add column if not exists promo_end_at text not null default '';
+alter table public.home_interiores_configuracoes_site_2026 add column if not exists og_image_url text not null default '';
+alter table public.home_interiores_configuracoes_site_2026 add column if not exists footer_address text not null default 'Sete Lagoas - MG';
+alter table public.home_interiores_configuracoes_site_2026 add column if not exists business_hours text not null default 'Atendimento sob consulta';
+alter table public.home_interiores_configuracoes_site_2026 add column if not exists privacy_email text not null default '';
+
+-- Preenche automaticamente identificadores de registros antigos.
+update public.home_interiores_catalogo_produtos_2026
+set code = 'HI-' || upper(substr(replace(id::text,'-',''),1,6))
+where code is null or code = '';
+
+update public.home_interiores_catalogo_produtos_2026
+set slug = trim(both '-' from regexp_replace(lower(translate(name,
+  'áàãâäéèêëíìîïóòõôöúùûüç',
+  'aaaaaeeeeiiiiooooouuuuc')),'[^a-z0-9]+','-','g')) || '-' || lower(code)
+where slug is null or slug = '';

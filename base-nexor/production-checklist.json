@@ -1,0 +1,7 @@
+{
+  "core": ["mobile_first", "responsive", "404", "privacy", "terms", "accessibility", "performance"],
+  "seo": ["meta_title", "meta_description", "canonical", "open_graph", "favicon", "robots", "sitemap"],
+  "conversion": ["whatsapp_contextual", "analytics_events", "editable_ctas"],
+  "catalog": ["multi_image", "favorites", "multi_quote", "product_url", "status", "draft_publish", "featured", "sort_order", "related_products", "smart_search"],
+  "admin": ["secure_session", "image_validation", "image_compression", "preview", "duplicate_record", "editable_content"]
+}

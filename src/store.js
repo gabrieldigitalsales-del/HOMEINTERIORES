@@ -10,6 +10,10 @@ const LOCAL_KEY = 'home_interiores_catalogo_produtos_2026';
 const LOCAL_ADMIN_SESSION_KEY = 'home_interiores_admin_local_session_2026';
 const isLocalDev = typeof window !== 'undefined' && ['localhost','127.0.0.1'].includes(window.location.hostname);
 
+export function slugify(value=''){return String(value).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,80)}
+export function productCode(index=0){return `HI-${String(index+1).padStart(4,'0')}`}
+function hydrateProduct(p,i=0){const code=p.code||productCode(i);return {...p,code,slug:p.slug||`${slugify(p.name)}-${String(code).toLowerCase()}`,status:p.status||'Disponível',published:p.published!==false,publication_status:p.publication_status||'published',old_price:p.old_price||'',sort_order:Number.isFinite(Number(p.sort_order))?Number(p.sort_order):i+1,related_ids:Array.isArray(p.related_ids)?p.related_ids:[]}}
+
 export const seedProducts = [
   {
     id: 'mesa-organica', name: 'Mesa Orgânica Essenza', category: 'Mesas',
@@ -51,16 +55,21 @@ export const seedProducts = [
 
 function localGet(){
   const raw = localStorage.getItem(LOCAL_KEY);
-  if (!raw) { localStorage.setItem(LOCAL_KEY, JSON.stringify(seedProducts)); return seedProducts; }
-  try { return JSON.parse(raw); } catch { return seedProducts; }
+  if (!raw) { const base=seedProducts.map(hydrateProduct); localStorage.setItem(LOCAL_KEY, JSON.stringify(base)); return base; }
+  try { return JSON.parse(raw).map(hydrateProduct); } catch { return seedProducts.map(hydrateProduct); }
 }
 function localSet(items){ localStorage.setItem(LOCAL_KEY, JSON.stringify(items)); }
 
 export async function listProducts(){
   if (!supabaseEnabled) return localGet();
-  const { data, error } = await supabase.from(TABLE_PRODUCTS).select('*').order('created_at', { ascending: false });
+  let { data, error } = await supabase.from(TABLE_PRODUCTS).select('*').order('sort_order', { ascending: true }).order('created_at', { ascending: false });
+  if (error) {
+    console.warn('Catálogo avançado ainda não atualizado; tentando compatibilidade:', error.message);
+    const fallback=await supabase.from(TABLE_PRODUCTS).select('*').order('created_at',{ascending:false});
+    data=fallback.data; error=fallback.error;
+  }
   if (error) { console.warn(error); return localGet(); }
-  return data?.length ? data : seedProducts;
+  return data?.length ? data.map(hydrateProduct) : seedProducts.map(hydrateProduct);
 }
 
 async function adminRequest(action, payload={}){
@@ -119,8 +128,22 @@ export async function deleteProduct(id){
   await adminRequest('deleteProduct',{id});
 }
 
+async function optimizeImage(file){
+  if(!file?.type?.startsWith('image/') || /gif|svg/i.test(file.type)) return file;
+  if(typeof document==='undefined') return file;
+  const bitmap=await createImageBitmap(file).catch(()=>null); if(!bitmap) return file;
+  const max=2200, scale=Math.min(1,max/Math.max(bitmap.width,bitmap.height));
+  const w=Math.max(1,Math.round(bitmap.width*scale)),h=Math.max(1,Math.round(bitmap.height*scale));
+  const canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;const ctx=canvas.getContext('2d');ctx.drawImage(bitmap,0,0,w,h);bitmap.close?.();
+  const blob=await new Promise(r=>canvas.toBlob(r,'image/webp',0.86));
+  if(!blob || blob.size>=file.size) return file;
+  return new File([blob],`${file.name.replace(/\.[^.]+$/,'')}.webp`,{type:'image/webp'});
+}
+
 export async function uploadImage(file){
-  if (!supabaseEnabled) return await new Promise((resolve,reject)=>{ const r=new FileReader(); r.onload=()=>resolve(r.result); r.onerror=reject; r.readAsDataURL(file); });
+  const optimized=await optimizeImage(file);
+  if (!supabaseEnabled) return await new Promise((resolve,reject)=>{ const r=new FileReader(); r.onload=()=>resolve(r.result); r.onerror=reject; r.readAsDataURL(optimized); });
+  file=optimized;
   const ext = file.name.split('.').pop()?.toLowerCase() || 'jpg';
   const signed=await adminRequest('createUpload',{ext});
   const {error}=await supabase.storage.from(BUCKET_IMAGES).uploadToSignedUrl(signed.path,signed.token,file,{cacheControl:'3600',contentType:file.type||undefined});
@@ -182,7 +205,21 @@ export const defaultSettings = {
   instagram_url: 'https://www.instagram.com/homeinterioresoficial/',
   whatsapp_general: '5531990813008',
   location: 'Sete Lagoas - MG',
-  institutional_image_url: 'https://images.unsplash.com/photo-1618220179428-22790b461013?auto=format&fit=crop&w=1600&q=88'
+  institutional_image_url: 'https://images.unsplash.com/photo-1618220179428-22790b461013?auto=format&fit=crop&w=1600&q=88',
+  promo_enabled: true,
+  promo_start_at: '',
+  promo_end_at: '',
+  og_image_url: '',
+  footer_address: 'Sete Lagoas - MG',
+  business_hours: 'Atendimento sob consulta',
+  privacy_email: '',
+  promo_messages: [
+    'ATÉ 10% OFF À VISTA',
+    'FRETE GRÁTIS EM CONDIÇÕES ESPECIAIS',
+    'OFERTAS EM PEÇAS SELECIONADAS',
+    'CONDIÇÕES EXCLUSIVAS PELO WHATSAPP',
+    'NOVIDADES NO SHOWROOM TODA SEMANA'
+  ]
 };
 
 export async function getSiteSettings(){
