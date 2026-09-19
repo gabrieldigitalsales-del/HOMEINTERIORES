@@ -200,3 +200,7 @@ insert into public.home_interiores_categorias_2026 (name, position) values
   ('Cadeiras',5),
   ('Decoração',6)
 on conflict do nothing;
+
+-- Catálogo premium: organização por ambiente.
+alter table public.home_interiores_catalogo_produtos_2026
+  add column if not exists environment text not null default 'Sala de estar';

@@ -7,6 +7,8 @@ export const TABLE_CATEGORIES = 'home_interiores_categorias_2026';
 export const defaultCategories = ['Mesas','Sofás','Poltronas','Aparadores','Cadeiras','Decoração'];
 const LOCAL_CATEGORIES_KEY = 'home_interiores_categorias_2026';
 const LOCAL_KEY = 'home_interiores_catalogo_produtos_2026';
+const LOCAL_ADMIN_SESSION_KEY = 'home_interiores_admin_local_session_2026';
+const isLocalDev = typeof window !== 'undefined' && ['localhost','127.0.0.1'].includes(window.location.hostname);
 
 export const seedProducts = [
   {
@@ -74,6 +76,7 @@ async function adminRequest(action, payload={}){
 }
 
 export async function checkAdminSession(){
+  if(isLocalDev) return sessionStorage.getItem(LOCAL_ADMIN_SESSION_KEY)==='ok';
   try{
     const r=await fetch('/api/admin-session',{credentials:'same-origin'});
     const j=await r.json();
@@ -82,6 +85,11 @@ export async function checkAdminSession(){
 }
 
 export async function adminLogin(password){
+  if(isLocalDev){
+    if(String(password||'').trim()!=='asd123') throw new Error('Senha inválida.');
+    sessionStorage.setItem(LOCAL_ADMIN_SESSION_KEY,'ok');
+    return true;
+  }
   const r=await fetch('/api/admin-login',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({password})});
   const j=await r.json().catch(()=>({}));
   if(!r.ok) throw new Error(j.error||'Senha inválida.');
@@ -89,6 +97,7 @@ export async function adminLogin(password){
 }
 
 export async function adminLogout(){
+  if(isLocalDev){sessionStorage.removeItem(LOCAL_ADMIN_SESSION_KEY);return;}
   await fetch('/api/admin-logout',{method:'POST',credentials:'same-origin'}).catch(()=>{});
 }
 
