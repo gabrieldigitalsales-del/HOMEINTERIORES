@@ -97,9 +97,21 @@ export default async function handler(req,res){
     }
     if(action==='saveSettings'){
       const settings={...(req.body.settings||{}),id:'principal'};
+      settings.hero_image_urls=Array.isArray(settings.hero_image_urls)?settings.hero_image_urls.filter(Boolean).slice(0,6):[];
+      settings.hero_image_url=settings.hero_image_urls[0]||settings.hero_image_url||'';
       delete settings.created_at;
+      const {data:before}=await sb.from(TABLE_SETTINGS).select('hero_image_url,hero_image_urls,institutional_image_url').eq('id','principal').maybeSingle();
       const {data,error}=await sb.from(TABLE_SETTINGS).upsert(settings).select().single();
       if(error) throw error;
+      if(before){
+        const oldUrls=[before.hero_image_url,...(Array.isArray(before.hero_image_urls)?before.hero_image_urls:[]),before.institutional_image_url].filter(Boolean);
+        const keepUrls=new Set([data.hero_image_url,...(Array.isArray(data.hero_image_urls)?data.hero_image_urls:[]),data.institutional_image_url].filter(Boolean));
+        const removePaths=[...new Set(oldUrls.filter(url=>!keepUrls.has(url)).map(homeStoragePath).filter(Boolean))];
+        if(removePaths.length){
+          const {error:storageError}=await sb.storage.from(BUCKET_IMAGES).remove(removePaths);
+          if(storageError) console.warn('Home Interiores: falha ao limpar imagens antigas das configurações:',storageError.message);
+        }
+      }
       return json(res,200,{data});
     }
     if(action==='createUpload'){
