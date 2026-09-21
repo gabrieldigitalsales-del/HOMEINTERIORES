@@ -998,6 +998,7 @@ const LOCAL_SETTINGS_KEY = 'home_interiores_configuracoes_site_2026';
 export const defaultSettings = {
   id: 'principal',
   hero_image_url: 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=2000&q=88',
+  hero_image_urls: ['https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=2000&q=88'],
   hero_kicker: 'Sete Lagoas · Minas Gerais',
   hero_title: 'Home Interiores',
   hero_subtitle: 'Design, curadoria e excelência para espaços que traduzem a sua essência.',
@@ -1026,15 +1027,28 @@ export async function getSiteSettings(){
   if (isLocalDev || !supabaseEnabled) {
     const raw=localStorage.getItem(LOCAL_SETTINGS_KEY);
     if(!raw){localStorage.setItem(LOCAL_SETTINGS_KEY,JSON.stringify(defaultSettings));return defaultSettings;}
-    try{return {...defaultSettings,...JSON.parse(raw)}}catch{return defaultSettings}
+    try{
+      const merged={...defaultSettings,...JSON.parse(raw)};
+      merged.hero_image_urls=Array.isArray(merged.hero_image_urls)&&merged.hero_image_urls.length
+        ? merged.hero_image_urls.filter(Boolean).slice(0,6)
+        : (merged.hero_image_url?[merged.hero_image_url]:[]);
+      merged.hero_image_url=merged.hero_image_urls[0]||merged.hero_image_url||'';
+      return merged;
+    }catch{return defaultSettings}
   }
   const {data,error}=await supabase.from(TABLE_SETTINGS).select('*').eq('id','principal').maybeSingle();
   if(error){console.warn(error);return defaultSettings}
-  return {...defaultSettings,...(data||{})};
+  const merged={...defaultSettings,...(data||{})};
+  merged.hero_image_urls=Array.isArray(merged.hero_image_urls)&&merged.hero_image_urls.length
+    ? merged.hero_image_urls.filter(Boolean).slice(0,6)
+    : (merged.hero_image_url?[merged.hero_image_url]:[]);
+  merged.hero_image_url=merged.hero_image_urls[0]||merged.hero_image_url||'';
+  return merged;
 }
 
 export async function saveSiteSettings(settings){
-  const payload={...defaultSettings,...settings,id:'principal'};
+  const heroImages=Array.isArray(settings?.hero_image_urls)?settings.hero_image_urls.filter(Boolean).slice(0,6):[];
+  const payload={...defaultSettings,...settings,id:'principal',hero_image_urls:heroImages,hero_image_url:heroImages[0]||settings?.hero_image_url||''};
   if (isLocalDev || !supabaseEnabled){localStorage.setItem(LOCAL_SETTINGS_KEY,JSON.stringify(payload));return payload;}
   const {data}=await adminRequest('saveSettings',{settings:payload});
   return data;
