@@ -857,8 +857,19 @@ export async function listProducts(){
     const fallback=await supabase.from(TABLE_PRODUCTS).select('*').order('created_at',{ascending:false});
     data=fallback.data; error=fallback.error;
   }
-  if (error) { console.warn(error); return localGet(); }
-  return data?.length ? data.map(hydrateProduct) : seedProducts.map(hydrateProduct);
+  if (error) { console.warn(error); return seedProducts.map(hydrateProduct); }
+  const remoteProducts = data?.length ? data.map(hydrateProduct) : [];
+  const remoteHasCurrentCatalog = remoteProducts.some(product => {
+    const urls = [product?.image_url, ...(Array.isArray(product?.image_urls) ? product.image_urls : [])]
+      .filter(Boolean)
+      .map(String);
+    return String(product?.code || '').startsWith('HI-') &&
+      urls.some(url =>
+        url.startsWith('/catalogo/') ||
+        url.includes('/storage/v1/object/public/home-interiores-produtos-2026/')
+      );
+  });
+  return remoteHasCurrentCatalog ? remoteProducts : seedProducts.map(hydrateProduct);
 }
 
 async function adminRequest(action, payload={}){
