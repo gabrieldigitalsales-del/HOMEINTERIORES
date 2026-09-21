@@ -484,3 +484,41 @@ html{scroll-behavior:smooth}body.menuOpen{overflow:hidden}.header{transition:bac
 .homeHero>img{animation:none!important}
 @media(max-width:800px){.multiHeroMedia img{transform:scale(1.02);transition:opacity .95s ease,visibility .95s ease,transform 6s ease}.multiHeroMedia img.active{transform:scale(1.055)}.heroPhotoDots{right:18px;bottom:18px}.heroPhotoDots button{width:13px}.heroPhotoDots button.active{width:26px}}
 @media(prefers-reduced-motion:reduce){.multiHeroMedia img{transition:opacity .3s ease!important;transform:none!important}.promoTickerTrack{animation:promoMarquee 34s linear infinite!important}}
+
+
+/* Admin — galeria de até 6 imagens do hero */
+.heroSettingsBlock{margin:8px 0 22px}
+.heroSettingsHead{display:flex;align-items:end;justify-content:space-between;gap:16px;margin-bottom:12px}
+.heroSettingsHead>div{display:flex;flex-direction:column;gap:4px}
+.heroSettingsHead strong{font-size:14px;font-weight:600}
+.heroSettingsHead small{font-size:11px;color:#77736b;font-weight:400}
+.heroSettingsHead>span{font-size:11px;color:#77736b}
+.heroSettingsGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.heroSettingCard{position:relative;aspect-ratio:16/10;overflow:hidden;border:1px solid #dedad2;background:#f4f1eb}
+.heroSettingCard>img{width:100%;height:100%;object-fit:cover;display:block}
+.heroSettingCard.empty{border-style:dashed;background:#faf9f6}
+.heroSlotNumber{position:absolute;left:8px;top:8px;min-width:22px;height:22px;padding:0 6px;display:grid;place-items:center;background:rgba(255,255,255,.92);font-size:10px;font-weight:700;z-index:3}
+.heroRemove{position:absolute;right:8px;top:8px;width:28px;height:28px;display:grid;place-items:center;border:0;background:rgba(255,255,255,.94);cursor:pointer;z-index:4}
+.heroOrder{position:absolute;left:8px;bottom:8px;display:flex;gap:4px;z-index:4}
+.heroOrder button{width:28px;height:28px;border:0;background:rgba(255,255,255,.94);display:grid;place-items:center;cursor:pointer}
+.heroOrder button:disabled{opacity:.4;cursor:default}
+.heroReplace{position:absolute;right:8px;bottom:8px;min-height:28px;padding:0 9px;display:flex;align-items:center;gap:5px;background:rgba(255,255,255,.94);font-size:10px;font-weight:600;cursor:pointer;z-index:4}
+.heroReplace input,.heroAdd input{display:none}
+.heroAdd{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;color:#5f5a51}
+.heroAdd span{font-size:11px;font-weight:600}
+.heroAdd small{font-size:9px;color:#8b867e;font-weight:400}
+.previewHeroCarousel>img{opacity:0;transition:opacity .9s ease,transform 5.2s ease;transform:scale(1.015);z-index:0}
+.previewHeroCarousel>img.active{opacity:1;transform:scale(1.055)}
+.previewHeroCarousel>.overlay{z-index:1}
+.previewHeroCarousel>.previewHeroContent{position:absolute;inset:auto 9% 9%;color:white;z-index:2}
+.previewHeroDots{position:absolute!important;left:9%!important;right:auto!important;bottom:3.8%!important;inset:auto auto 3.8% 9%!important;display:flex!important;gap:7px!important;z-index:4!important}
+.previewHeroDots button{width:24px;height:3px;padding:0;border:0;background:rgba(255,255,255,.4);cursor:pointer}
+.previewHeroDots button.active{background:white}
+.previewThumbs{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px;margin-top:8px}
+.previewThumbs button{padding:0;border:1px solid transparent;background:none;aspect-ratio:16/10;overflow:hidden;cursor:pointer;opacity:.56}
+.previewThumbs button.active{border-color:#171513;opacity:1}
+.previewThumbs img{width:100%;height:100%;object-fit:cover;display:block}
+@media(max-width:620px){
+  .heroSettingsGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .previewThumbs{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
