@@ -9,6 +9,18 @@ function cleanProduct(input={}){
   return p;
 }
 
+function homeStoragePath(url=''){
+  const marker='/storage/v1/object/public/'+BUCKET_IMAGES+'/';
+  const value=String(url||'');
+  const index=value.indexOf(marker);
+  if(index<0) return '';
+  return decodeURIComponent(value.slice(index+marker.length).split('?')[0]);
+}
+function productStoragePaths(product={}){
+  const urls=[product.image_url,...(Array.isArray(product.image_urls)?product.image_urls:[])].filter(Boolean);
+  return [...new Set(urls.map(homeStoragePath).filter(Boolean))];
+}
+
 export default async function handler(req,res){
   if(req.method !== 'POST') return json(res,405,{error:'Método não permitido.'});
   if(!isAdmin(req)) return json(res,401,{error:'Sessão do painel expirada. Entre novamente em /admin.'});
@@ -28,13 +40,29 @@ export default async function handler(req,res){
         return json(res,200,{data});
       }
       const id=product.id; delete product.id;
+      const {data:before,error:beforeError}=await sb.from(TABLE_PRODUCTS).select('image_url,image_urls').eq('id',id).single();
+      if(beforeError) throw beforeError;
       const {data,error}=await sb.from(TABLE_PRODUCTS).update(product).eq('id',id).select().single();
       if(error) throw error;
+      const oldPaths=productStoragePaths(before);
+      const keepPaths=new Set(productStoragePaths(data));
+      const removePaths=oldPaths.filter(path=>!keepPaths.has(path));
+      if(removePaths.length){
+        const {error:storageError}=await sb.storage.from(BUCKET_IMAGES).remove(removePaths);
+        if(storageError) console.warn('Home Interiores: falha ao limpar imagens antigas:',storageError.message);
+      }
       return json(res,200,{data});
     }
     if(action==='deleteProduct'){
+      const {data:before,error:beforeError}=await sb.from(TABLE_PRODUCTS).select('image_url,image_urls').eq('id',req.body.id).single();
+      if(beforeError) throw beforeError;
       const {error}=await sb.from(TABLE_PRODUCTS).delete().eq('id',req.body.id);
       if(error) throw error;
+      const removePaths=productStoragePaths(before);
+      if(removePaths.length){
+        const {error:storageError}=await sb.storage.from(BUCKET_IMAGES).remove(removePaths);
+        if(storageError) console.warn('Home Interiores: falha ao remover imagens do produto:',storageError.message);
+      }
       return json(res,200,{ok:true});
     }
     if(action==='saveCategory'){
