@@ -1,0 +1,19 @@
+HOME INTERIORES — REWORK DE LAYOUT
+
+Removido:
+- seção "Por ambiente"
+- filtro por ambiente no catálogo
+- etiqueta de ambiente nos cards
+- campo de ambiente no formulário principal do admin
+
+Adicionado/refinado:
+- Vitrine em movimento com produtos reais
+- Auto-scroll elegante no desktop, pausa no hover
+- Swipe horizontal no mobile
+- Clique em qualquer peça da vitrine abre a galeria do produto
+- Prioridade a produtos com múltiplas fotos
+- Catálogo simplificado para busca + categoria
+- Modal exibe quantidade de fotos
+- Relacionados agora seguem a mesma categoria
+- Mantido suporte a múltiplas imagens, capa, ordem e galeria
+- Layout responsivo para desktop/tablet/mobile

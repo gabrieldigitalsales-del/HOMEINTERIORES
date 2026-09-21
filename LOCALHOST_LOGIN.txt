@@ -1,0 +1,17 @@
+LOGIN LOCALHOST
+
+Ao executar npm run dev (Vite):
+- Acesse http://localhost:5173/admin
+- Senha: asd123
+- A autenticação local usa sessionStorage, porque o Vite não executa as funções /api da Vercel.
+
+IMPORTANTE SOBRE CADASTROS NO LOCALHOST
+Se o projeto estiver conectado ao Supabase, operações administrativas protegidas (salvar/excluir/upload) continuam dependendo das funções /api. Para testar o ambiente completo exatamente como na Vercel, use:
+
+  npx vercel dev
+
+ou, se a Vercel CLI já estiver instalada:
+
+  npm run dev:vercel
+
+Na Vercel publicada, o login continua usando /api/admin-login e cookie HttpOnly.

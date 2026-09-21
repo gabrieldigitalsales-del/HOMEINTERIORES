@@ -1,0 +1,21 @@
+HOME INTERIORES — atualização catálogo premium
+19/09/2026
+
+Principais mudanças:
+- Home simplificada e mais comercial, com foco em catálogo e conversão.
+- Categorias visuais logo após o hero, com acesso direto ao catálogo filtrado.
+- Cards de produto sem textos longos; destaque para foto, nome, categoria e preço/consulta.
+- Movimento nas fotos: quando há mais de uma foto, o card alterna visualmente no hover.
+- Atalho de WhatsApp diretamente em cada produto.
+- Catálogo com busca mais evidente, categorias fixas e contagem de peças.
+- Visual do catálogo em grade de 3 colunas no desktop, 2 no tablet e 1 no celular.
+- Cadastro inteligente no painel: ao digitar o nome do produto, o sistema tenta sugerir a categoria.
+- Botão “Preencher com inteligência” para completar categoria e uma descrição curta quando estiver vazia.
+- Hero, CTA e rodapé com menos texto.
+- Logo existente mantida.
+
+Observação sobre Instagram:
+O projeto já aponta para @homeinterioresoficial. A página pública do Instagram bloqueou a leitura automatizada nesta sessão, então o perfil não foi alterado com base em dados não verificados.
+
+Validação:
+A instalação das dependências npm não concluiu dentro do ambiente de execução, então o build local não pôde ser finalizado aqui. O código foi mantido dentro da estrutura React/Vite já existente e as alterações foram aplicadas diretamente ao projeto.

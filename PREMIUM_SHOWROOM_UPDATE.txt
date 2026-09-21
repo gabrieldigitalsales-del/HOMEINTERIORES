@@ -1,0 +1,18 @@
+HOME INTERIORES — SHOWROOM PREMIUM RESPONSIVO
+
+Atualizações desta versão:
+- múltiplas imagens por produto já integradas ao catálogo e ao painel;
+- alternância automática de fotos nos cards;
+- controles de foto e indicadores nos cards;
+- zoom/movimento sutil estilo showroom;
+- galeria grande do produto com setas no desktop e swipe no celular;
+- filtros por categoria e por ambiente;
+- novo campo Ambiente no cadastro inteligente;
+- seção editorial "Por ambiente" na Home;
+- definição manual da foto de capa;
+- reorganização da ordem das imagens no painel;
+- layout e galerias responsivos para mobile;
+- respeito a prefers-reduced-motion para acessibilidade.
+
+SUPABASE:
+Execute novamente supabase/home_interiores_setup.sql no SQL Editor para adicionar o campo environment em instalações já existentes.

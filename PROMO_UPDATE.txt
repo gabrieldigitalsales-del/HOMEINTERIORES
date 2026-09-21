@@ -1,0 +1,11 @@
+FAIXA PROMOCIONAL HOME INTERIORES
+
+- Faixa animada no topo do site
+- 5 chamadas padrão
+- Editável em Admin > Configurações > Faixa promocional
+- Pode ligar/desligar
+- Responsiva para mobile
+- Respeita prefers-reduced-motion
+
+Se o Supabase já está criado, rode:
+supabase/home_interiores_faixa_promocional.sql

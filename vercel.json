@@ -1,0 +1,8 @@
+{
+  "routes": [
+    { "src": "/robots.txt", "dest": "/api/robots" },
+    { "src": "/sitemap.xml", "dest": "/api/sitemap" },
+    { "handle": "filesystem" },
+    { "src": "/.*", "dest": "/index.html" }
+  ]
+}
