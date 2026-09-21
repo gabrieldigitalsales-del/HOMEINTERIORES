@@ -207,7 +207,6 @@ html{scroll-behavior:smooth}body{background:var(--paper);letter-spacing:-.005em}
 .movingShowcaseHead>a{display:flex;align-items:center;gap:8px;font-size:10px;text-transform:uppercase;letter-spacing:.13em;opacity:.82}
 .movingViewport{overflow:hidden;mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);-webkit-mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent)}
 .movingRail{display:flex;gap:12px;width:max-content;animation:showroomRail 46s linear infinite;padding:0 6px}
-.movingViewport:hover .movingRail{animation-play-state:paused}
 .movingTile{position:relative;width:min(31vw,440px);aspect-ratio:.82/1;border:0;padding:0;background:#171411;overflow:hidden;cursor:pointer;text-align:left;color:#fff;flex:0 0 auto}
 .movingTile>img{width:100%;height:100%;object-fit:cover;transition:transform 1.2s cubic-bezier(.16,1,.3,1),filter .5s;filter:saturate(.84)}
 .movingTile:hover>img{transform:scale(1.045);filter:saturate(1)}
@@ -226,7 +225,7 @@ html{scroll-behavior:smooth}body{background:var(--paper);letter-spacing:-.005em}
 .promoTicker{height:34px;background:var(--forest);color:#f6f2e8;overflow:hidden;display:flex;align-items:center;border-bottom:1px solid rgba(255,255,255,.1);position:relative;z-index:55}
 .promoTicker:before,.promoTicker:after{content:'';position:absolute;top:0;bottom:0;width:7vw;z-index:2;pointer-events:none}.promoTicker:before{left:0;background:linear-gradient(90deg,var(--forest),transparent)}.promoTicker:after{right:0;background:linear-gradient(270deg,var(--forest),transparent)}
 .promoTickerTrack{display:flex;align-items:center;width:max-content;animation:promoMarquee 34s linear infinite;will-change:transform}
-.promoTicker:hover .promoTickerTrack{animation-play-state:paused}
+.promoTicker:hover .promoTickerTrack{animation-play-state:running}
 .promoTickerItem{display:inline-flex;align-items:center;gap:28px;padding:0 18px;white-space:nowrap;text-transform:uppercase;letter-spacing:.14em;font-size:9px;line-height:34px}
 .promoTickerItem b{font-weight:500}.promoTickerItem i{font-style:normal;color:#b9b39f;font-size:10px;opacity:.7}
 @keyframes promoMarquee{to{transform:translateX(-50%)}}
@@ -265,3 +264,223 @@ html{scroll-behavior:smooth}body.menuOpen{overflow:hidden}.header{transition:bac
 .productPage{align-items:start}.productPageGallery{min-width:0}.productPageMain{box-shadow:0 18px 46px rgba(17,36,30,.06)}.productPageInfo{padding-top:34px}.productPageInfo h1{letter-spacing:-.04em}.productPageInfo>p{font-size:15px;max-width:500px}.productPageThumbs button{transition:opacity .2s ease,transform .2s ease}.productPageThumbs button:hover{transform:translateY(-2px)}
 @media(max-width:800px){.headerSearchBtn{display:grid}.navSearchBtn{display:none}.searchOverlay{padding:105px 18px 24px}.searchOverlayClose{top:22px;right:18px}.searchOverlayResults{grid-template-columns:1fr}.searchOverlayField input{font-size:34px}.searchOverlayResults a{grid-template-columns:68px 1fr auto}.searchOverlayResults img{width:68px;height:80px}.homeHero{min-height:72vh}.editorialProductGrid{display:flex!important;overflow-x:auto;scroll-snap-type:x mandatory;gap:10px!important;padding-bottom:5px}.editorialProductGrid .productCard{flex:0 0 82vw;scroll-snap-align:start}.editorialProductGrid .productCard:first-child .productImage,.editorialProductGrid .productCard:not(:first-child) .productImage{aspect-ratio:4/5}.socialGalleryGrid a:nth-child(2){transform:none}.fullscreenGallery{padding:64px 10px 50px}.fullscreenPrev{left:8px}.fullscreenNext{right:8px}.fullscreenClose{right:12px;top:12px}.fullscreenGallery>img{max-height:82vh}.homeHero>img{animation:none;transform:scale(1.02)}}
 @media(prefers-reduced-motion:reduce){.homeHero>img{animation:none!important}.productCardInteractive:hover .productCover.active{transform:none}}
+
+/* ===== Atualização catálogo denso + mobile-first (sem banner de cookies) ===== */
+.cookieBanner,.cookieBackdrop,.cookiePreferences{display:none!important}
+
+.productGrid,.catalogGrid{
+  grid-template-columns:repeat(8,minmax(0,1fr))!important;
+  gap:28px 10px!important;
+}
+.productCard{min-width:0;padding-top:9px}
+.productImage{aspect-ratio:4/5!important}
+.productBody{padding:10px 1px 0!important;min-width:0}
+.productLabels{gap:4px!important;min-width:0}
+.productLabels .eyebrow{font-size:7px!important;letter-spacing:.12em!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.productLabels small{font-size:7px!important;white-space:nowrap}
+.productBody h3{font-size:15px!important;line-height:1.12!important;margin:4px 0 7px!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.productMeta{margin-top:5px!important;padding-top:6px!important;gap:5px!important}
+.productOpenHint,.price{font-size:8px!important;letter-spacing:.04em!important}
+.priceStack del{font-size:8px!important}
+.favoriteBtn{width:30px!important;height:30px!important;top:7px!important;right:7px!important}
+.favoriteBtn svg{width:14px;height:14px}
+.productQuickWa{width:31px!important;height:31px!important;right:7px!important;bottom:7px!important}
+.productQuickWa svg{width:15px;height:15px}
+.photoCount{font-size:7px!important;padding:5px 6px!important;left:7px!important;bottom:7px!important}
+.productBadges .tag,.statusTag{font-size:6px!important;padding:5px 6px!important;top:7px!important;left:7px!important;letter-spacing:.08em!important}
+.cardGalleryControls{display:none!important}
+.cardDots{bottom:8px!important;gap:3px!important}
+.cardDots button{width:4px!important;height:4px!important}
+
+@media(max-width:1650px){
+  .productGrid,.catalogGrid{grid-template-columns:repeat(7,minmax(0,1fr))!important}
+}
+@media(max-width:1350px){
+  .productGrid,.catalogGrid{grid-template-columns:repeat(6,minmax(0,1fr))!important}
+}
+@media(max-width:980px){
+  .productGrid,.catalogGrid{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:22px 8px!important}
+  .section,.catalog{padding-left:4vw!important;padding-right:4vw!important}
+}
+@media(max-width:620px){
+  .productGrid,.catalogGrid{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:18px 6px!important}
+  .storefrontSection,.newArrivals,.recentlyViewed{padding-left:12px!important;padding-right:12px!important}
+  .catalog{padding-left:10px!important;padding-right:10px!important}
+  .productBody h3{font-size:12px!important;margin:3px 0 5px!important}
+  .productLabels .eyebrow,.productLabels small{font-size:6px!important}
+  .productOpenHint,.price{font-size:7px!important}
+  .productMeta .productOpenHint:last-child{display:none}
+  .favoriteBtn{width:25px!important;height:25px!important;top:5px!important;right:5px!important}
+  .favoriteBtn svg{width:12px;height:12px}
+  .productQuickWa{width:26px!important;height:26px!important;right:5px!important;bottom:5px!important}
+  .productQuickWa svg{width:13px;height:13px}
+  .photoCount{display:none!important}
+  .cardDots{display:none!important}
+  .productBadges .tag,.statusTag{font-size:5px!important;padding:4px 5px!important;top:5px!important;left:5px!important;max-width:72%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+}
+@media(max-width:440px){
+  .productGrid,.catalogGrid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:17px 6px!important}
+  .productImage{aspect-ratio:3/4!important}
+  .productBody h3{font-size:12px!important}
+}
+
+
+/* ===== Ajuste fino: remover Novidades e reduzir Vistos anteriormente ===== */
+.recentlyViewed{padding-top:58px!important;padding-bottom:58px!important;background:#f7f5ef!important}
+.recentlyViewed .sectionHead{margin-bottom:18px!important}
+.recentlyViewed .sectionHead .eyebrow{font-size:8px!important;letter-spacing:.14em!important}
+.recentlyViewed .sectionHead h2{font-size:clamp(22px,2.1vw,30px)!important;line-height:1.06!important}
+.recentProductGrid{gap:12px 8px!important}
+.recentProductScale{transform:scale(.88);transform-origin:top center}
+.recentProductScale .productBody h3{font-size:12px!important}
+.recentProductScale .productLabels .eyebrow,.recentProductScale .productLabels small{font-size:6px!important}
+.recentProductScale .productOpenHint,.recentProductScale .price,.recentProductScale .priceStack del{font-size:7px!important}
+.recentProductScale .favoriteBtn{width:24px!important;height:24px!important}
+.recentProductScale .favoriteBtn svg{width:11px!important;height:11px!important}
+.recentProductScale .productQuickWa{width:24px!important;height:24px!important}
+.recentProductScale .productQuickWa svg{width:11px!important;height:11px!important}
+@media(max-width:620px){.recentlyViewed{padding-top:34px!important;padding-bottom:34px!important}.recentlyViewed .sectionHead h2{font-size:20px!important}.recentProductScale{transform:scale(.82)}}
+@media(max-width:440px){.recentProductScale{transform:scale(.8)}}
+
+
+/* ===== Vitrine contínua + navegação mobile ===== */
+.movingRail{animation:showroomRail 38s linear infinite!important;will-change:transform}
+.movingViewport:hover .movingRail{animation-play-state:running!important}
+.movingTile:hover>img{transform:scale(1.035)}
+@media(max-width:620px){
+  .movingShowcase{padding:54px 0 60px!important}
+  .movingShowcaseHead{padding:0 18px 22px!important;display:flex!important;align-items:flex-end!important}
+  .movingShowcaseHead h2{font-size:30px!important;margin:0!important}
+  .movingShowcaseHead>a{margin:0!important;font-size:8px!important}
+  .movingViewport{overflow:hidden!important;scroll-snap-type:none!important;mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent)!important;-webkit-mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent)!important;padding-left:0!important}
+  .movingRail{animation:showroomRail 32s linear infinite!important;gap:7px!important;padding:0 3.5px!important}
+  .movingTile{width:56vw!important;max-width:260px!important;scroll-snap-align:none!important}
+  .movingTile>div{left:14px!important;right:14px!important;bottom:14px!important}
+  .movingTile strong{font-size:18px!important}
+  .movingTile span,.movingTile small{font-size:6px!important}
+}
+@media(prefers-reduced-motion:reduce){.movingRail{animation:showroomRail 70s linear infinite!important}}
+
+
+/* ===== FIX CAPA DOS PRODUTOS ===== */
+.dynamicProductImage{background:#ece8e1!important}
+.dynamicProductImage .productCover{position:absolute!important;inset:0!important;display:block!important;width:100%!important;height:100%!important;object-fit:cover!important;opacity:1!important;visibility:visible!important;filter:none!important;mix-blend-mode:normal!important;z-index:1!important;background:transparent!important}
+.dynamicProductImage .productCover.active{opacity:1!important;transform:scale(1.02)!important}
+.productCard:hover .dynamicProductImage .productCover.active{transform:scale(1.045)!important}
+.productBadges,.favoriteBtn,.photoCount,.cardGalleryControls,.cardDots,.productQuickWa{z-index:5!important}
+
+
+/* ===== FIX DEFINITIVO CAPAS DO CATÁLOGO ===== */
+.catalogPhotoFrame{position:relative!important;overflow:hidden!important;background:#ece8e1!important;animation:none!important}
+.catalogPhotoVisible{position:relative!important;inset:auto!important;display:block!important;width:100%!important;height:100%!important;object-fit:cover!important;opacity:1!important;visibility:visible!important;filter:none!important;mix-blend-mode:normal!important;transform:none!important;z-index:1!important;background:none!important;animation:none!important;transition:transform .7s ease!important}
+.productCard:hover .catalogPhotoVisible{transform:scale(1.025)!important}
+.catalogPhotoFrame::before,.catalogPhotoFrame::after{content:none!important;display:none!important}
+
+
+/* ===== FIX DE RENDERIZAÇÃO DOS CARDS — sem camadas GPU problemáticas ===== */
+.productCard{
+  content-visibility:visible!important;
+  contain:none!important;
+  contain-intrinsic-size:auto!important;
+  transform:none!important;
+  box-shadow:none!important;
+  isolation:isolate!important;
+}
+.productCard.reveal{animation:none!important;opacity:1!important;transform:none!important}
+.productCardInteractive,.productCardInteractive:hover{transform:none!important;box-shadow:none!important}
+.catalogPhotoFrame{
+  position:relative!important;
+  overflow:hidden!important;
+  isolation:isolate!important;
+  background:#ece8e1!important;
+  animation:none!important;
+  transform:none!important;
+  filter:none!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+}
+.catalogPhotoVisible{
+  position:absolute!important;
+  inset:0!important;
+  width:100%!important;
+  height:100%!important;
+  object-fit:cover!important;
+  opacity:1!important;
+  visibility:visible!important;
+  z-index:1!important;
+  transform:none!important;
+  filter:none!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+  mix-blend-mode:normal!important;
+  animation:none!important;
+  transition:none!important;
+}
+.productCard:hover .catalogPhotoVisible{transform:none!important;filter:none!important}
+.catalogPhotoFrame::before,.catalogPhotoFrame::after{display:none!important;content:none!important}
+.catalogPhotoFrame .tag,
+.catalogPhotoFrame .photoCount,
+.catalogPhotoFrame .cardDots,
+.catalogPhotoFrame .favoriteBtn,
+.catalogPhotoFrame .productQuickWa,
+.catalogPhotoFrame .cardGalleryControls,
+.catalogPhotoFrame .cardGalleryControls button{
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+  filter:none!important;
+  mix-blend-mode:normal!important;
+}
+.catalogPhotoFrame .productBadges{z-index:20!important}
+.catalogPhotoFrame .favoriteBtn{z-index:21!important}
+.catalogPhotoFrame .photoCount{z-index:21!important}
+.catalogPhotoFrame .cardDots{z-index:21!important;background:rgba(20,16,13,.28)!important}
+.catalogPhotoFrame .productQuickWa{z-index:21!important}
+.catalogPhotoFrame .cardGalleryControls{z-index:21!important}
+
+
+/* ===== CARDS FINAIS: capa fixa + zoom suave ===== */
+.catalogStaticFrame{
+  position:relative!important;
+  overflow:hidden!important;
+  background:#ece8e1!important;
+  isolation:isolate!important;
+}
+.catalogStaticFrame::before,.catalogStaticFrame::after{content:none!important;display:none!important}
+.catalogStaticCover{
+  position:absolute!important;
+  inset:0!important;
+  width:100%!important;
+  height:100%!important;
+  object-fit:cover!important;
+  display:block!important;
+  opacity:1!important;
+  visibility:visible!important;
+  z-index:1!important;
+  filter:none!important;
+  mix-blend-mode:normal!important;
+  transform:scale(1)!important;
+  transition:transform 1.05s cubic-bezier(.2,.65,.25,1)!important;
+}
+.productCard:hover .catalogStaticCover{transform:scale(1.055)!important}
+.catalogStaticFrame .productBadges{z-index:5!important}
+.catalogStaticFrame .favoriteBtn,.catalogStaticFrame .productQuickWa{z-index:6!important}
+.catalogStaticFrame .photoCount,.catalogStaticFrame .cardDots,.catalogStaticFrame .cardGalleryControls{display:none!important}
+@media(max-width:800px){.productCard:hover .catalogStaticCover{transform:scale(1)!important}}
+@media(prefers-reduced-motion:reduce){.catalogStaticCover{transition:none!important}.productCard:hover .catalogStaticCover{transform:none!important}}
+
+
+/* ===== Hero multi-imagem + faixa promocional sem pausa ===== */
+.promoTicker,.promoTicker *{pointer-events:auto}
+.promoTickerTrack,.promoTicker:hover .promoTickerTrack{animation-play-state:running!important}
+.multiHero{overflow:hidden}
+.multiHeroMedia{position:absolute;inset:0;overflow:hidden;background:#1c2a27}
+.multiHeroMedia img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;visibility:hidden;transform:scale(1.025);transition:opacity 1.15s ease,visibility 1.15s ease,transform 7s ease;will-change:opacity,transform}
+.multiHeroMedia img.active{opacity:1;visibility:visible;transform:scale(1.075)}
+.multiHero>.overlay{z-index:1}.multiHero>.heroContent,.multiHero>.heroIndex,.heroPhotoDots{z-index:2}
+.multiHero>.heroContent,.multiHero>.heroIndex{position:relative}
+.heroPhotoDots{position:absolute;right:4vw;bottom:34px;display:flex;gap:7px;align-items:center}
+.heroPhotoDots button{width:18px;height:2px;border:0;padding:0;background:rgba(255,255,255,.42);cursor:pointer;transition:width .28s ease,background .28s ease}
+.heroPhotoDots button.active{width:36px;background:#fff}
+.homeHero>img{animation:none!important}
+@media(max-width:800px){.multiHeroMedia img{transform:scale(1.02);transition:opacity .95s ease,visibility .95s ease,transform 6s ease}.multiHeroMedia img.active{transform:scale(1.055)}.heroPhotoDots{right:18px;bottom:18px}.heroPhotoDots button{width:13px}.heroPhotoDots button.active{width:26px}}
+@media(prefers-reduced-motion:reduce){.multiHeroMedia img{transition:opacity .3s ease!important;transform:none!important}.promoTickerTrack{animation:promoMarquee 34s linear infinite!important}}
