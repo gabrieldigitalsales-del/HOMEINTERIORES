@@ -9,12 +9,12 @@ export const TABLE_CATEGORIES = 'home_interiores_categorias_2026';
 export const BUCKET_IMAGES = 'home-interiores-produtos-2026';
 
 function sessionSecret(){
-  // A sessão não depende mais obrigatoriamente de uma variável extra no Vercel.
-  // Se existir um secret dedicado ou service role, usamos; caso contrário,
-  // derivamos uma chave estável da senha do painel + salt interno do projeto.
+  // Em produção a sessão usa um secret dedicado quando disponível.
+  // Como fallback seguro, usa a service role que já existe apenas no servidor.
+  // Nunca deriva a sessão da senha do painel.
   return process.env.HOME_INTERIORES_SESSION_SECRET
     || process.env.SUPABASE_SERVICE_ROLE_KEY
-    || `home-interiores-session::${adminPassword()}::2026-premium`;
+    || '';
 }
 
 function expectedToken(){
@@ -44,10 +44,8 @@ export function clearSessionCookie(){
 }
 
 export function adminPassword(){
-  // Em produção, nunca usa senha padrão. No desenvolvimento local, o frontend aceita asd123 sem passar pela API.
   return process.env.HOME_INTERIORES_ADMIN_PASSWORD || '';
 }
-
 
 export function serverSupabase(){
   const url = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;

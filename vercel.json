@@ -1,5 +1,16 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "routes": [
+    {
+      "src": "/(.*)",
+      "headers": {
+        "X-Content-Type-Options": "nosniff",
+        "Referrer-Policy": "strict-origin-when-cross-origin",
+        "Permissions-Policy": "camera=(self), microphone=(), geolocation=()",
+        "X-Frame-Options": "SAMEORIGIN"
+      },
+      "continue": true
+    },
     { "src": "/robots.txt", "dest": "/api/robots" },
     { "src": "/sitemap.xml", "dest": "/api/sitemap" },
     { "handle": "filesystem" },

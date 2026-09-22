@@ -81,3 +81,16 @@ Não desative o RLS e não crie policy de escrita para `anon`. O site público d
 ### Limite comercial
 
 O sistema mantém o limite máximo de 30 produtos. A validação é feita no painel e também na API antes de qualquer novo cadastro.
+
+
+## Hardening de segurança — 22/09/2026
+
+- Snapshot privado verificado antes das alterações.
+- Catálogo, categorias e configurações permanecem leitura pública.
+- Escrita direta por `anon`/`authenticated` foi removida; o painel grava somente pela API server-side.
+- Bucket público restrito a imagens (JPEG/PNG/WEBP/GIF) de até 10 MB.
+- Inclusões, edições e exclusões passam a gerar histórico privado no Supabase.
+- Login do admin possui limite de tentativas por IP.
+- A sessão HttpOnly não é mais derivada da senha do painel.
+- Headers de segurança adicionados no Vercel sem alterar as rotas existentes.
+- Dois arquivos do Storage foram identificados como não referenciados; nenhum foi removido automaticamente.
