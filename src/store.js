@@ -2,9 +2,9 @@ import { supabase, supabaseEnabled } from './supabase';
 
 export const TABLE_PRODUCTS = 'home_interiores_catalogo_produtos_2026';
 export const BUCKET_IMAGES = 'home-interiores-produtos-2026';
-export const MAX_PRODUCTS = 30;
+export const MAX_PRODUCTS = 100;
 export const TABLE_CATEGORIES = 'home_interiores_categorias_2026';
-export const defaultCategories = ['Mesas','Sofás','Poltronas','Aparadores','Cadeiras','Decoração'];
+export const defaultCategories = ['Mesas','Sofás','Poltronas','Aparadores','Cadeiras','Decoração','Quadros'];
 const LOCAL_CATEGORIES_KEY = 'home_interiores_categorias_2026';
 const LOCAL_KEY = 'home_interiores_catalogo_produtos_2026';
 const LOCAL_CATALOG_VERSION_KEY = 'home_interiores_catalogo_version_2026';
