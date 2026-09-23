@@ -1014,6 +1014,7 @@ export const defaultSettings = {
   footer_address: 'Sete Lagoas - MG',
   business_hours: 'Atendimento sob consulta',
   privacy_email: '',
+  commerce_enabled: false,
   promo_messages: [
     'ATÉ 10% OFF À VISTA',
     'FRETE GRÁTIS EM CONDIÇÕES ESPECIAIS',

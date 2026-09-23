@@ -69,6 +69,9 @@ export default async function handler(req,res){
 
   try{
     const sb=serverSupabase();
+    const {data:shopSettings,error:settingsError}=await sb.from('home_interiores_configuracoes_site_2026').select('commerce_enabled').eq('id','principal').maybeSingle();
+    if(settingsError) throw settingsError;
+    if(shopSettings?.commerce_enabled!==true) return json(res,403,{error:'As compras pelo site estão desativadas no momento. Fale com a Home Interiores pelo WhatsApp.'});
     const {data:products,error}=await sb.from(TABLE_PRODUCTS).select('id,name,category,description,price,image_url,code,published,status').in('id',ids);
     if(error) throw error;
 

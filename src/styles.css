@@ -588,3 +588,20 @@ html{scroll-behavior:smooth}body.menuOpen{overflow:hidden}.header{transition:bac
  .cartItemInfo{padding-right:34px}
  .checkoutSuccess{padding-left:20px;padding-right:20px}
 }
+
+
+/* Admin — chave geral de carrinho e pagamento */
+.commerceControl{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:20px;border:1px solid #ded6ce;background:#fff;margin-top:10px}
+.commerceControl>div{display:grid;gap:5px}
+.commerceControl strong{font-size:14px}
+.commerceControl small{font-size:11px;line-height:1.5;color:#777069;font-weight:400}
+.commerceControl.enabled{border-color:rgba(69,108,83,.36);background:#f7faf7}
+.commerceSwitch{position:relative;flex:0 0 auto}
+.commerceSwitch input{position:absolute;opacity:0;pointer-events:none}
+.commerceSwitch span{display:block;width:52px;height:29px;border-radius:999px;background:#c9c5bf;position:relative;cursor:pointer;transition:.2s ease}
+.commerceSwitch span:after{content:'';position:absolute;width:23px;height:23px;border-radius:50%;background:#fff;left:3px;top:3px;box-shadow:0 2px 7px rgba(0,0,0,.16);transition:.2s ease}
+.commerceSwitch input:checked+span{background:#456c53}
+.commerceSwitch input:checked+span:after{transform:translateX(23px)}
+.commerceHelp{font-size:11px!important;line-height:1.55!important;color:#827b74!important;margin:8px 0 0!important}
+.commerceOffPage{gap:8px}
+.commerceOffPage .btn{margin-top:8px}
