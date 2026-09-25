@@ -685,3 +685,49 @@ html,body,#root{
     top:50%!important;
   }
 }
+
+
+/* ===== Quadros: preservar a peça inteira nas imagens ===== */
+.quadroProduct .catalogStaticFrame,
+.quadroProduct .productModalImage,
+.quadroProduct .productPageMain,
+.quadroProduct .productThumbs button,
+.quadroProduct .productPageThumbs button{
+  background:#f1eee8!important;
+}
+.quadroProduct .catalogStaticCover,
+.quadroProduct .productModalImage>img,
+.quadroProduct .productThumbs img,
+.quadroProduct .productPageMain>img,
+.quadroProduct .productPageThumbs img{
+  object-fit:contain!important;
+  object-position:center!important;
+}
+.quadroProduct .catalogStaticCover{
+  padding:4%!important;
+}
+.quadroProduct .productModalImage>img,
+.quadroProduct .productPageMain>img{
+  padding:3%!important;
+}
+.quadroProduct .productThumbs img,
+.quadroProduct .productPageThumbs img{
+  padding:3px!important;
+}
+@media(max-width:800px){
+  .quadroProduct .catalogStaticCover{
+    padding:3%!important;
+  }
+  .quadroProduct .productModalImage>img,
+  .quadroProduct .productPageMain>img{
+    padding:2.5%!important;
+  }
+
+  /* No celular, o hero deixa de ampliar tanto a foto */
+  .multiHeroMedia img{
+    transform:scale(1.005)!important;
+  }
+  .multiHeroMedia img.active{
+    transform:scale(1.018)!important;
+  }
+}
