@@ -731,3 +731,129 @@ html,body,#root{
     transform:scale(1.018)!important;
   }
 }
+
+
+/* ===== Correção definitiva Quadros — desktop + mobile ===== */
+
+/* Cards: nunca cortar o quadro */
+.productCard.quadroProduct .productImage{
+  background:#f1eee8!important;
+}
+.productCard.quadroProduct .catalogStaticCover{
+  object-fit:contain!important;
+  object-position:center!important;
+  transform:none!important;
+  padding:8px!important;
+}
+.productCard.quadroProduct:hover .catalogStaticCover{
+  transform:none!important;
+}
+
+/* Página do produto no desktop: altura guiada pela própria foto */
+.productPage.quadroProduct .productPageGallery{
+  position:relative!important;
+  z-index:1!important;
+  min-width:0!important;
+}
+.productPage.quadroProduct .productPageMain{
+  position:relative!important;
+  aspect-ratio:auto!important;
+  height:auto!important;
+  min-height:0!important;
+  overflow:hidden!important;
+  background:#f1eee8!important;
+}
+.productPage.quadroProduct .productPageMain>img{
+  position:relative!important;
+  inset:auto!important;
+  display:block!important;
+  width:100%!important;
+  height:auto!important;
+  max-width:100%!important;
+  max-height:none!important;
+  object-fit:contain!important;
+  object-position:center!important;
+  padding:12px!important;
+}
+.productPage.quadroProduct .productPageThumbs img{
+  object-fit:contain!important;
+  background:#f1eee8!important;
+}
+
+/* Modal desktop: quadro inteiro */
+.productModal.quadroProduct .productModalImage{
+  background:#f1eee8!important;
+}
+.productModal.quadroProduct .productModalImage>img{
+  object-fit:contain!important;
+  object-position:center!important;
+  padding:14px!important;
+}
+.productModal.quadroProduct .productThumbs img{
+  object-fit:contain!important;
+  background:#f1eee8!important;
+}
+
+/* Mobile: imagem participa do fluxo e nunca passa por cima dos textos */
+@media(max-width:800px){
+  .productPage.quadroProduct{
+    display:block!important;
+    width:100%!important;
+    max-width:100%!important;
+    overflow:visible!important;
+  }
+  .productPage.quadroProduct .productPageGallery{
+    position:relative!important;
+    width:100%!important;
+    max-width:100%!important;
+    overflow:visible!important;
+  }
+  .productPage.quadroProduct .productPageMain{
+    position:relative!important;
+    width:100%!important;
+    height:auto!important;
+    min-height:0!important;
+    aspect-ratio:auto!important;
+    overflow:hidden!important;
+  }
+  .productPage.quadroProduct .productPageMain>img{
+    position:relative!important;
+    inset:auto!important;
+    width:100%!important;
+    height:auto!important;
+    max-height:none!important;
+    object-fit:contain!important;
+    padding:8px!important;
+  }
+  .productPage.quadroProduct .productPageInfo{
+    position:relative!important;
+    top:auto!important;
+    z-index:0!important;
+    clear:both!important;
+    padding-top:24px!important;
+  }
+
+  .productModal.quadroProduct .productModalGallery{
+    position:relative!important;
+    overflow:visible!important;
+  }
+  .productModal.quadroProduct .productModalImage{
+    position:relative!important;
+    height:auto!important;
+    min-height:0!important;
+    overflow:hidden!important;
+  }
+  .productModal.quadroProduct .productModalImage>img{
+    position:relative!important;
+    inset:auto!important;
+    width:100%!important;
+    height:auto!important;
+    max-height:58svh!important;
+    object-fit:contain!important;
+    padding:8px!important;
+  }
+  .productModal.quadroProduct .productModalContent{
+    position:relative!important;
+    z-index:1!important;
+  }
+}
