@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "mkdir -p public/produtos-2026 && tar -xzf assets/produtos-2026.tar.gz -C public/produtos-2026 && vite build",
     "preview": "vite preview",
     "dev:vercel": "vercel dev"
   },
